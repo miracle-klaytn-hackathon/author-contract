@@ -17,7 +17,7 @@
         <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
         <Java-WebSocket.version>1.5.4</Java-WebSocket.version>
         <frontend-plugin.version>1.9.1</frontend-plugin.version>
-        <smart-contract-plugin.version>1.1.1</smart-contract-plugin.version>
+        <smart-contract-plugin.version>1.2.0</smart-contract-plugin.version>
         <openapi.generator.version>6.6.0</openapi.generator.version>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
         <skipITs>true</skipITs>
@@ -170,6 +170,25 @@
                 <groupId>com.github.miracle-klaytn-hackathon</groupId>
                 <artifactId>smart-contract-maven-plugin</artifactId>
                 <version>${smart-contract-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile-contract</goal>
+                        </goals>
+                        <configuration>
+                            <web3jLocation>.web3j</web3jLocation>
+                            <inputContracts>
+                                <inputContract>src/main/resources/AuthorContract.sol</inputContract>
+                            </inputContracts>
+                            <solcVersion>0.8.20</solcVersion>
+                            <solcArguments>
+                                --abi --overwrite --base-path src/main/resources --include-path node_modules
+                            </solcArguments>
+                            <abiOutput>${project.build.outputDirectory}/abi</abiOutput>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.openapitools</groupId>
