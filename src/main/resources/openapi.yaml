@@ -1,4 +1,4 @@
-openapi: '3.1.0'
+openapi: '3.0.0'
 info:
   version: '1'
   title: Author Token API
@@ -26,6 +26,7 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/ErrorResponse'
+
   /author/mint:
     post:
       operationId: mintAuthorToken
@@ -62,15 +63,25 @@ components:
     MintReceipt:
       type: object
       properties:
-        hash:
+        minterAddress:
+          type: string
+        tokenAddress:
+          type: string
+        txHash:
+          type: string
+        txBlockNumber:
+          type: integer
+        txBlockHash:
           type: string
         ref:
           type: string
+        gasCost:
+          type: integer
 
     ErrorResponse:
       type: object
       properties:
         code:
-          type: number
+          type: string
         message:
           type: string
