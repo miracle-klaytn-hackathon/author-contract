@@ -40,7 +40,7 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: '#/components/schemas/TransactionReceipt'
+                $ref: '#/components/schemas/MintReceipt'
         default:
           description: Token cannot be mint
           content:
@@ -59,11 +59,13 @@ components:
         owner:
           type: string
 
-    TransactionReceipt:
-      hash:
-        type: string
-      ref:
-        type: string
+    MintReceipt:
+      type: object
+      properties:
+        hash:
+          type: string
+        ref:
+          type: string
 
     ErrorResponse:
       type: object
