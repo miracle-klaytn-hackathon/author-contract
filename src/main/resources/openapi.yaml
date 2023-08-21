@@ -7,6 +7,8 @@ paths:
   /author:
     get:
       operationId: getAuthorContract
+      tags:
+        - AuthorContract
       summary: Get Author Contract on-chain information
       description: Return the contract address and other information
       responses:
@@ -19,6 +21,33 @@ paths:
                 $ref: '#/components/schemas/SmartContract'
         default:
           description: On-chain information is not available
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+  /author/mint:
+    post:
+      operationId: mintAuthorToken
+      tags:
+        - AuthorContract
+      summary: Mint Author Contract Token
+      description: After mint, return the transaction receipt
+      responses:
+        200:
+          description: Token minted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TransactionReceipt'
+        default:
+          description: Token cannot be mint
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -28,4 +57,18 @@ components:
         address:
           type: string
         owner:
+          type: string
+
+    TransactionReceipt:
+      hash:
+        type: string
+      ref:
+        type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
           type: string
