@@ -1,0 +1,31 @@
+openapi: '3.1.0'
+info:
+  version: '1'
+  title: Author Token API
+  description: API for interacting with Smart Contracts of Author Token
+paths:
+  /author:
+    get:
+      operationId: getAuthorContract
+      summary: Get Author Contract on-chain information
+      description: Return the contract address and other information
+      responses:
+        200:
+          description: On-chain information is available
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SmartContract'
+        default:
+          description: On-chain information is not available
+
+components:
+  schemas:
+    SmartContract:
+      type: object
+      properties:
+        address:
+          type: string
+        owner:
+          type: string

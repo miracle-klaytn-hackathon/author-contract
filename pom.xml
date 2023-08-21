@@ -194,6 +194,33 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>${openapi.generator.version}</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>jaxrs-spec</generatorName>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <apiPackage>com.github.miracle.klaytn.hackathon.openapi.api</apiPackage>
+                                <modelPackage>com.github.miracle.klaytn.hackathon.openapi.model</modelPackage>
+                                <library>quarkus</library>
+                                <supportAsync>true</supportAsync>
+                                <useJakartaEe>true</useJakartaEe>
+                                <generateBuilders>true</generateBuilders>
+                                <interfaceOnly>true</interfaceOnly>
+                                <dateLibrary>java8</dateLibrary>
+                                <returnResponse>true</returnResponse>
+                                <useBeanValidation>false</useBeanValidation>
+                                <openApiNullable>false</openApiNullable>
+                                <useSwaggerAnnotations>false</useSwaggerAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
