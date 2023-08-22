@@ -20,17 +20,17 @@ import java.math.BigInteger;
 public class AuthorContract implements AuthorContractOnChain {
 
     @Inject
-    @ConfigProperty(name = "CONTRACT_AUTHOR_ADDRESS")
+    @ConfigProperty(name = "contract.author.address")
     private String contractAddress;
 
     @Inject
-    @ConfigProperty(name = "MIRACLE_PRIVATE_KEY")
-    private String miraclePrivateKey;
+    @ConfigProperty(name = "admin.key")
+    private String adminKey;
 
     @Inject
     // TODO: add this environment variable
-    @ConfigProperty(name = "MIRACLE_ADDRESS")
-    private String miracleAddress;
+    @ConfigProperty(name = "admin.address")
+    private String adminAddress;
 
     @Inject
     private CaverProvider caverProvider;
@@ -39,7 +39,7 @@ public class AuthorContract implements AuthorContractOnChain {
 
     @PostConstruct
     public void init() throws Exception {
-        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(miraclePrivateKey);
+        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
         String contractAbi = ContractUtils.loadContractAbi("AuthorContract");
         onChainContract = new KIP7(caverProvider.get(), contractAddress);
         // TODO: force use contractAbi by reflection
@@ -50,11 +50,11 @@ public class AuthorContract implements AuthorContractOnChain {
 
     @Override
     public MintReceipt mint(BigInteger amount) throws SmartContractException {
-        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(miraclePrivateKey);
+        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
         onChainContract.getCaver().wallet.add(miracleKeyRing);
         try {
             TransactionReceipt.TransactionReceiptData receipt = onChainContract.mint(
-                    miracleAddress, amount);
+                    adminAddress, amount);
             if (receipt.getTxError() != null) {
                 throw new Exception("On Chain Transaction error");
             }

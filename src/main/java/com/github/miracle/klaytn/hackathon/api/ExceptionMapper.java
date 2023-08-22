@@ -20,7 +20,7 @@ public class ExceptionMapper {
 
     private static ErrorResponse toErrorResponse(SmartContractException exception) {
         return ErrorResponse.builder()
-                .code(500)
+                .code("General Error")
                 .message(exception.getMessage())
                 .build();
     }

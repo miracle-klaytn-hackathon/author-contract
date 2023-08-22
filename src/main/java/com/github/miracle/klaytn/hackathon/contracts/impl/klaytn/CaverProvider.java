@@ -11,7 +11,7 @@ public class CaverProvider implements Supplier<Caver> {
 
     private final Caver caver;
 
-    public CaverProvider(@ConfigProperty(name = "RPC_URL") String rpcURL) {
+    public CaverProvider(@ConfigProperty(name = "rpc.url") String rpcURL) {
         this.caver = new Caver(rpcURL);
     }
 
