@@ -4,7 +4,6 @@ import com.github.miracle.klaytn.hackathon.contracts.AuthorContractOnChain;
 import com.github.miracle.klaytn.hackathon.contracts.SmartContractException;
 import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 import com.github.miracle.klaytn.hackathon.utils.ContractUtils;
-import com.klaytn.caver.Caver;
 import com.klaytn.caver.contract.SendOptions;
 import com.klaytn.caver.kct.kip7.KIP7;
 import com.klaytn.caver.methods.response.TransactionReceipt;
@@ -41,9 +40,7 @@ public class AuthorContract implements AuthorContractOnChain {
     public void init() throws Exception {
         AbstractKeyring adminKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
         String contractAbi = ContractUtils.loadContractAbi("AuthorContract");
-        onChainContract = (KIP7) KIP7.class.getSuperclass()
-                .getDeclaredConstructor(Caver.class, String.class, String.class)
-                .newInstance(caverProvider.get(), contractAbi, contractAddress);
+        onChainContract = new KIP7Extension(caverProvider.get(), contractAbi, contractAddress);
         SendOptions defaultSendOptions = new SendOptions();
         defaultSendOptions.setFrom(adminKeyRing.getAddress());
         onChainContract.setDefaultSendOptions(defaultSendOptions);
