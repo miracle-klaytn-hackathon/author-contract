@@ -27,11 +27,11 @@ public class ContractUtils {
     public static MintReceipt toMintReceipt(TransactionReceipt.TransactionReceiptData transactionReceipt) {
         return MintReceipt.builder()
                 .minterAddress(transactionReceipt.getFrom())
-                .tokenAddress(transactionReceipt.getContractAddress())
+                .tokenAddress(transactionReceipt.getTo())
                 .txHash(transactionReceipt.getTransactionHash())
-                .txBlockNumber(Integer.valueOf(transactionReceipt.getBlockNumber()))
+                .txBlockNumber(transactionReceipt.getBlockNumber())
                 .txBlockHash(transactionReceipt.getBlockHash())
-                .gasCost(Integer.valueOf(transactionReceipt.getGasUsed()))
+                .gasCost(transactionReceipt.getGasUsed())
                 .ref(BAOBAB_TX_IO + transactionReceipt.getTransactionHash())
                 .build();
     }

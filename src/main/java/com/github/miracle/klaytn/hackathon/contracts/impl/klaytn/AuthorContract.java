@@ -39,23 +39,22 @@ public class AuthorContract implements AuthorContractOnChain {
 
     @PostConstruct
     public void init() throws Exception {
-        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
+        AbstractKeyring adminKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
         String contractAbi = ContractUtils.loadContractAbi("AuthorContract");
         onChainContract = new KIP7(caverProvider.get(), contractAddress);
         // TODO: force use contractAbi by reflection
         SendOptions defaultSendOptions = new SendOptions();
-        defaultSendOptions.setFrom(miracleKeyRing.getAddress());
+        defaultSendOptions.setFrom(adminKeyRing.getAddress());
         onChainContract.setDefaultSendOptions(defaultSendOptions);
+        onChainContract.getCaver().wallet.add(adminKeyRing);
     }
 
     @Override
     public MintReceipt mint(BigInteger amount) throws SmartContractException {
-        AbstractKeyring miracleKeyRing = KeyringFactory.createFromPrivateKey(adminKey);
-        onChainContract.getCaver().wallet.add(miracleKeyRing);
         try {
             TransactionReceipt.TransactionReceiptData receipt = onChainContract.mint(
                     adminAddress, amount);
-            if (receipt.getTxError() != null) {
+            if ("0".equals(receipt.getStatus())) {
                 throw new Exception("On Chain Transaction error");
             }
             return ContractUtils.toMintReceipt(receipt);

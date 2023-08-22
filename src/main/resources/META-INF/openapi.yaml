@@ -70,13 +70,13 @@ components:
         txHash:
           type: string
         txBlockNumber:
-          type: integer
+          type: string
         txBlockHash:
           type: string
         ref:
           type: string
         gasCost:
-          type: integer
+          type: string
 
     ErrorResponse:
       type: object
