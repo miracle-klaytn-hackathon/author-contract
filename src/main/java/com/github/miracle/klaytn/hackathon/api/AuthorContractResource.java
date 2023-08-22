@@ -3,10 +3,7 @@ package com.github.miracle.klaytn.hackathon.api;
 import com.github.miracle.klaytn.hackathon.contracts.ContractStore;
 import com.github.miracle.klaytn.hackathon.contracts.FungibleContract;
 import com.github.miracle.klaytn.hackathon.openapi.api.AuthorContractApi;
-import com.github.miracle.klaytn.hackathon.openapi.model.MintFTRequest;
-import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
-import com.github.miracle.klaytn.hackathon.openapi.model.SmartContract;
-import com.github.miracle.klaytn.hackathon.openapi.model.TotalToken;
+import com.github.miracle.klaytn.hackathon.openapi.model.*;
 import com.github.miracle.klaytn.hackathon.utils.UniUtils;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
@@ -26,11 +24,18 @@ public class AuthorContractResource implements AuthorContractApi {
 
     private final FungibleContract contract;
 
+    private final String address;
+
+    private final String name;
+
     @Inject
     public AuthorContractResource(
-            @ConfigProperty(name = "contract.author.address") String address,
-            ContractStore klaytnContractStore) {
-        contract = klaytnContractStore.getAuthorContract(address, CONTRACT_NAME);
+            @ConfigProperty(name = "contract.author.address") String contractAddress,
+            @ConfigProperty(name = "contract.author.name") String contractName,
+            ContractStore contractStore) {
+        contract = contractStore.getAuthorContract(contractAddress, contractName);
+        address = contractAddress;
+        name = contractName;
     }
 
     @Override
@@ -38,39 +43,59 @@ public class AuthorContractResource implements AuthorContractApi {
         return Uni.combine()
                 .all()
                 .unis(buildInfoUnis())
-                .usingConcurrencyOf(5)
-                .combinedWith(AuthorContractResource::toSmartContractResponse)
+                .usingConcurrencyOf(3)
+                .combinedWith(this::toSmartContract)
+                .map(entity -> Response.ok(entity).build())
                 .subscribeAsCompletionStage();
     }
 
     private List<Uni<?>> buildInfoUnis() {
         return List.of(
-                UniUtils.createFromSupplier(contract::getName),
                 UniUtils.createFromSupplier(contract::getSymbol),
-                UniUtils.createFromSupplier(contract::getAddress),
                 UniUtils.createFromSupplier(contract::getOwnerAddress),
                 UniUtils.createFromSupplier(contract::getDecimals));
     }
 
-    private static Response toSmartContractResponse(List<?> unis) {
-        SmartContract authorContract = SmartContract.builder()
-                .name((String) unis.get(0))
-                .symbol((String) unis.get(1))
-                .address((String) unis.get(2))
-                .owner((String) unis.get(3))
-                .decimals((Integer) unis.get(4))
+    private SmartContract toSmartContract(List<?> unis) {
+        return SmartContract.builder()
+                .name(name)
+                .address(address)
+                .symbol((String) unis.get(0))
+                .owner((String) unis.get(1))
+                .decimals((Integer) unis.get(2))
                 .build();
-        return Response.ok().entity(authorContract).build();
     }
 
     @Override
     public CompletionStage<Response> getTotalToken() {
-        return null;
+        return UniUtils.createFromSupplier(contract::getTotalSupply)
+                .map(this::toTotalToken)
+                .map(entity -> Response.ok(entity).build())
+                .subscribeAsCompletionStage();
+    }
+
+    private TotalToken toTotalToken(BigInteger amount) {
+        return TotalToken.builder()
+                .contractName(name)
+                .contractAddress(address)
+                .amount(BigDecimal.valueOf(amount.longValue()))
+                .build();
     }
 
     @Override
     public CompletionStage<Response> getAccountBalance(String accountAddress) {
-        return null;
+        return UniUtils.createFromSupplier(() -> contract.getAccountBalance(accountAddress))
+                .map(amount -> toAccountBalance(amount, accountAddress))
+                .map(entity -> Response.ok(entity).build())
+                .subscribeAsCompletionStage();
+    }
+
+    private AccountBalance toAccountBalance(Integer amount, String accountAddress) {
+        return AccountBalance.builder()
+                .contractAddress(address)
+                .accountAddress(accountAddress)
+                .balance(amount)
+                .build();
     }
 
     @Override

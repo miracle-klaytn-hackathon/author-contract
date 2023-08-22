@@ -71,6 +71,16 @@ public class KlaytnAuthorContract extends KlaytnFungibleContract implements Fung
     }
 
     @Override
+    public Integer getAccountBalance(String accountAddress) {
+        try {
+            return onChainContract.balanceOf(accountAddress).intValue();
+        } catch (Exception exception) {
+            throw new SmartContractException(
+                    "Could not get total supply for the given contract", exception);
+        }
+    }
+
+    @Override
     public MintReceipt mint(String privateKey, BigInteger amount) throws SmartContractException {
         AbstractKeyring keyring = KeyringFactory.createFromPrivateKey(privateKey);
         try {

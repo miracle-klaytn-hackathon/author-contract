@@ -18,6 +18,8 @@ public interface FungibleContract {
 
     BigInteger getTotalSupply() throws SmartContractException;
 
+    Integer getAccountBalance(String accountAddress);
+
     MintReceipt mint(String privateKey, BigInteger amount) throws SmartContractException;
 
 }
