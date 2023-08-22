@@ -28,7 +28,6 @@ public class AuthorContract implements AuthorContractOnChain {
     private String adminKey;
 
     @Inject
-    // TODO: add this environment variable
     @ConfigProperty(name = "admin.address")
     private String adminAddress;
 
