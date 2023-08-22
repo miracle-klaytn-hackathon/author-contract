@@ -9,8 +9,7 @@ paths:
       operationId: getAuthorContract
       tags:
         - AuthorContract
-      summary: Get Author Contract on-chain information
-      description: Return the contract address and other information
+      description: Get Author Contract on-chain information
       responses:
         200:
           description: On-chain information is available
@@ -20,7 +19,58 @@ paths:
                 type: object
                 $ref: '#/components/schemas/SmartContract'
         default:
-          description: On-chain information is not available
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /author/total:
+    get:
+      operationId: getTotalToken
+      tags:
+        - AuthorContract
+      description: Get the total amount of available token
+      responses:
+        200:
+          description: Return the amount of available token
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TotalToken'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /author/balance/{accountAddress}:
+    get:
+      operationId: getAccountBalance
+      tags:
+        - AuthorContract
+      description: Get Balance of a given address
+      parameters:
+        - in: path
+          required: true
+          name: accountAddress
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return the balance of the given address
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/AccountBalance'
+        default:
+          description: Error when invoking contract function
           content:
             application/json:
               schema:
@@ -32,8 +82,7 @@ paths:
       operationId: mintAuthorToken
       tags:
         - AuthorContract
-      summary: Mint Author Contract Token
-      description: Attempt to mint a token from Author Contract. If mint is success, return Mint Receipt
+      description: Mint Author Contract Token
       requestBody:
         required: true
         content:
@@ -41,7 +90,6 @@ paths:
             schema:
               type: object
               $ref: '#/components/schemas/MintFTRequest'
-
       responses:
         200:
           description: Token minted successfully
@@ -51,7 +99,7 @@ paths:
                 type: object
                 $ref: '#/components/schemas/MintReceipt'
         default:
-          description: Token cannot be mint
+          description: Error when invoking contract function
           content:
             application/json:
               schema:
@@ -67,6 +115,32 @@ components:
           type: string
         owner:
           type: string
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: integer
+
+    TotalToken:
+      type: object
+      properties:
+        contractAddress:
+          type: string
+        contractName:
+          type: string
+        amount:
+          type: number
+
+    AccountBalance:
+      type: object
+      properties:
+        contractAddress:
+          type: string
+        accountAddress:
+          type: string
+        balance:
+          type: integer
 
     MintFTRequest:
       type: object

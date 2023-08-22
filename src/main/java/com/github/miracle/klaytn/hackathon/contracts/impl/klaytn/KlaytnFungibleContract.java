@@ -1,22 +1,18 @@
 package com.github.miracle.klaytn.hackathon.contracts.impl.klaytn;
 
 import com.klaytn.caver.contract.SendOptions;
+import com.klaytn.caver.kct.kip7.KIP7;
 import com.klaytn.caver.methods.response.TransactionReceipt;
 import com.klaytn.caver.wallet.KeyringContainer;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
-import jakarta.inject.Inject;
 
 import java.math.BigInteger;
 
 public abstract class KlaytnFungibleContract {
 
-    @Inject
-    ContractStore contractStore;
-
     protected TransactionReceipt.TransactionReceiptData
-    mint(String contractAddress, AbstractKeyring minterKeyring, BigInteger amount) throws Exception {
+    mint(KIP7 contract, AbstractKeyring minterKeyring, BigInteger amount) throws Exception {
         String minterAddress = minterKeyring.getAddress().toLowerCase();
-        KIP7Extension contract = contractStore.getFungibleContract(contractAddress, "AuthorContract");
         KeyringContainer wallet = contract.getCaver().wallet;
         if (wallet.getKeyring(minterAddress) == null) {
             wallet.add(minterKeyring);

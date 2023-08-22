@@ -6,26 +6,77 @@ import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 import com.github.miracle.klaytn.hackathon.utils.ContractUtils;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.math.BigInteger;
 
-@ApplicationScoped
 public class KlaytnAuthorContract extends KlaytnFungibleContract implements FungibleContract {
 
-    @Inject
-    @ConfigProperty(name = "contract.author.address")
-    private String contractAddress;
+    private final KIP7Extension onChainContract;
+
+    private final String contractName;
+
+    public KlaytnAuthorContract(KIP7Extension onChainContract, String contractName) {
+        this.onChainContract = onChainContract;
+        this.contractName = contractName;
+    }
+
+    @Override
+    public String getName() throws SmartContractException {
+        return contractName;
+    }
+
+    @Override
+    public String getAddress() throws SmartContractException {
+        return onChainContract.getContractAddress();
+    }
+
+    @Override
+    public String getSymbol() throws SmartContractException {
+        try {
+            return onChainContract.symbol();
+        } catch (Exception exception) {
+            throw new SmartContractException(
+                    "Could not find a symbol for the given contract", exception);
+        }
+    }
+
+    @Override
+    public String getOwnerAddress() throws SmartContractException {
+        try {
+            return onChainContract.symbol();
+        } catch (Exception exception) {
+            throw new SmartContractException(
+                    "Could not find an owner for the given contract", exception);
+        }
+    }
+
+    @Override
+    public Integer getDecimals() throws SmartContractException {
+        try {
+            return onChainContract.decimals();
+        } catch (Exception exception) {
+            throw new SmartContractException(
+                    "Could not find decimals for the given contract", exception);
+        }
+    }
+
+    @Override
+    public BigInteger getTotalSupply() throws SmartContractException {
+        try {
+            return onChainContract.totalSupply();
+        } catch (Exception exception) {
+            throw new SmartContractException(
+                    "Could not get total supply for the given contract", exception);
+        }
+    }
 
     @Override
     public MintReceipt mint(String privateKey, BigInteger amount) throws SmartContractException {
         AbstractKeyring keyring = KeyringFactory.createFromPrivateKey(privateKey);
         try {
-            return ContractUtils.toMintReceipt(super.mint(contractAddress, keyring, amount));
-        } catch (Exception e) {
-            throw new SmartContractException("Cannot mint. ", e);
+            return ContractUtils.toMintReceipt(super.mint(onChainContract, keyring, amount));
+        } catch (Exception exception) {
+            throw new SmartContractException("Cannot mint. ", exception);
         }
     }
 

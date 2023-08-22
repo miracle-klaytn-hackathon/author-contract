@@ -1,11 +1,15 @@
 package com.github.miracle.klaytn.hackathon.contracts.impl.klaytn;
 
 import com.klaytn.caver.Caver;
+import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.kct.kip7.KIP7;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public class KIP7Extension extends KIP7 {
 
     private final Contract extension;
@@ -21,5 +25,14 @@ public class KIP7Extension extends KIP7 {
         return new KIP7Extension(caver, address, extension);
     }
 
+    public String owner() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        List<Type> ownerOnChain = call("owner");
+        if (ownerOnChain.size() != 1)
+            throw new IllegalAccessException("This contract does not have one owner");
+        Object ownerAddress = ownerOnChain.get(0).getValue();
+        if (!(ownerAddress instanceof String))
+            throw new ClassNotFoundException("Incorrect owner type");
+        return (String) ownerAddress;
+    }
 
 }
