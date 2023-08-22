@@ -11,7 +11,7 @@ import java.math.BigInteger;
 public abstract class KlaytnFungibleContract {
 
     @Inject
-    private ContractStore contractStore;
+    ContractStore contractStore;
 
     protected TransactionReceipt.TransactionReceiptData
     mint(String contractAddress, AbstractKeyring minterKeyring, BigInteger amount) throws Exception {
