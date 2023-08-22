@@ -34,6 +34,14 @@ paths:
         - AuthorContract
       summary: Mint Author Contract Token
       description: After mint, return the transaction receipt
+      parameters:
+        - in: query
+          description: The amount of Token to mint
+          required: true
+          name: amount
+          schema:
+            type: integer
+
       responses:
         200:
           description: Token minted successfully

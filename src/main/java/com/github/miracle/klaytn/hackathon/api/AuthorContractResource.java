@@ -24,8 +24,8 @@ public class AuthorContractResource implements AuthorContractApi {
     }
 
     @Override
-    public CompletionStage<Response> mintAuthorToken() {
-        Supplier<MintReceipt> mintSupplier = () -> authorContract.mint(BigInteger.valueOf(100000));
+    public CompletionStage<Response> mintAuthorToken(Integer amount) {
+        Supplier<MintReceipt> mintSupplier = () -> authorContract.mint(BigInteger.valueOf(amount.longValue()));
         return  UniUtils.createFromSupplier(mintSupplier)
                 .map(receipt -> Response.ok().entity(receipt).build())
                 .subscribeAsCompletionStage();
