@@ -24,7 +24,8 @@ public class ContractUtils {
         return Files.readString(Path.of(contractUrl.toURI()));
     }
 
-    public static MintReceipt toMintReceipt(TransactionReceipt.TransactionReceiptData transactionReceipt) {
+    public static MintReceipt toMintReceipt(
+            TransactionReceipt.TransactionReceiptData transactionReceipt) {
         return MintReceipt.builder()
                 .minterAddress(transactionReceipt.getFrom())
                 .tokenAddress(transactionReceipt.getTo())
@@ -32,7 +33,6 @@ public class ContractUtils {
                 .txBlockNumber(transactionReceipt.getBlockNumber())
                 .txBlockHash(transactionReceipt.getBlockHash())
                 .gasCost(transactionReceipt.getGasUsed())
-                .ref(BAOBAB_TX_IO + transactionReceipt.getTransactionHash())
                 .build();
     }
 

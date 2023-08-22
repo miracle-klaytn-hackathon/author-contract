@@ -89,8 +89,6 @@ components:
           type: string
         txBlockHash:
           type: string
-        ref:
-          type: string
         gasCost:
           type: string
 
