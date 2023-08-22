@@ -1,7 +1,8 @@
 package com.github.miracle.klaytn.hackathon.api;
 
-import com.github.miracle.klaytn.hackathon.contracts.AuthorContractOnChain;
+import com.github.miracle.klaytn.hackathon.contracts.FungibleContract;
 import com.github.miracle.klaytn.hackathon.openapi.api.AuthorContractApi;
+import com.github.miracle.klaytn.hackathon.openapi.model.MintFTRequest;
 import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 import com.github.miracle.klaytn.hackathon.utils.UniUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
 public class AuthorContractResource implements AuthorContractApi {
 
     @Inject
-    private AuthorContractOnChain authorContract;
+    private FungibleContract fungibleContract;
 
     @Override
     public CompletionStage<Response> getAuthorContract() {
@@ -24,8 +25,10 @@ public class AuthorContractResource implements AuthorContractApi {
     }
 
     @Override
-    public CompletionStage<Response> mintAuthorToken(Integer amount) {
-        Supplier<MintReceipt> mintSupplier = () -> authorContract.mint(BigInteger.valueOf(amount.longValue()));
+    public CompletionStage<Response> mintAuthorToken(MintFTRequest mintFTRequest) {
+        Supplier<MintReceipt> mintSupplier = () -> fungibleContract.mint(
+                mintFTRequest.getPrivateKey(),
+                BigInteger.valueOf(mintFTRequest.getAmount()));
         return  UniUtils.createFromSupplier(mintSupplier)
                 .map(receipt -> Response.ok().entity(receipt).build())
                 .subscribeAsCompletionStage();

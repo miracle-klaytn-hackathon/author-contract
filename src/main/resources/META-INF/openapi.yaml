@@ -33,14 +33,14 @@ paths:
       tags:
         - AuthorContract
       summary: Mint Author Contract Token
-      description: After mint, return the transaction receipt
-      parameters:
-        - in: query
-          description: The amount of Token to mint
-          required: true
-          name: amount
-          schema:
-            type: integer
+      description: Attempt to mint a token from Author Contract. If mint is success, return Mint Receipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/MintFTRequest'
 
       responses:
         200:
@@ -67,6 +67,14 @@ components:
           type: string
         owner:
           type: string
+
+    MintFTRequest:
+      type: object
+      properties:
+        privateKey:
+          type: string
+        amount:
+          type: integer
 
     MintReceipt:
       type: object

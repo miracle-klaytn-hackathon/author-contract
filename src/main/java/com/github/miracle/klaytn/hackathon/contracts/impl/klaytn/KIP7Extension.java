@@ -11,9 +11,14 @@ public class KIP7Extension extends KIP7 {
     private final Contract extension;
 
     // Methods other than KIP7 methods should use extension to invoke
-    public KIP7Extension(Caver caver, String abi, String contractAddress) throws IOException {
-        super(caver, contractAddress);
-        extension = Contract.create(caver, abi, contractAddress);
+    private KIP7Extension(Caver caver, String address, Contract extension) throws IOException {
+        super(caver, address);
+        this.extension = extension;
+    }
+
+    public static KIP7Extension create(Caver caver, String abi, String address) throws IOException {
+        Contract extension = Contract.create(caver, abi, address);
+        return new KIP7Extension(caver, address, extension);
     }
 
 

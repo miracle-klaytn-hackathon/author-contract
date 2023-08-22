@@ -130,9 +130,6 @@
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>${frontend-plugin.version}</version>
-                <configuration>
-                    <workingDirectory>target</workingDirectory>
-                </configuration>
                 <executions>
                     <execution>
                         <id>install-node</id>
@@ -174,7 +171,7 @@
                             </inputContracts>
                             <solcVersion>0.8.20</solcVersion>
                             <solcArguments>
-                                --abi --overwrite --base-path src/main/resources --include-path target/node_modules
+                                --abi --overwrite --base-path src/main/resources --include-path node_modules
                             </solcArguments>
                             <abiOutput>${project.build.outputDirectory}/abi</abiOutput>
                         </configuration>

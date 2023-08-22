@@ -4,8 +4,8 @@ import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 
 import java.math.BigInteger;
 
-public interface AuthorContractOnChain {
+public interface FungibleContract {
 
-    MintReceipt mint(BigInteger amount) throws SmartContractException;
+    MintReceipt mint(String privateKey, BigInteger amount) throws SmartContractException;
 
 }
