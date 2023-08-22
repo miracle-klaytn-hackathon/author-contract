@@ -1,0 +1,175 @@
+openapi: '3.0.0'
+info:
+  version: '1'
+  title: Author Token API
+  description: API for interacting with Smart Contracts of Author Token
+paths:
+  /author:
+    get:
+      operationId: getAuthorContract
+      tags:
+        - AuthorContract
+      description: Get Author Contract on-chain information
+      responses:
+        200:
+          description: On-chain information is available
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SmartContract'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /author/total:
+    get:
+      operationId: getTotalToken
+      tags:
+        - AuthorContract
+      description: Get the total amount of available token
+      responses:
+        200:
+          description: Return the amount of available token
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TotalToken'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /author/balance/{accountAddress}:
+    get:
+      operationId: getAccountBalance
+      tags:
+        - AuthorContract
+      description: Get Balance of a given address
+      parameters:
+        - in: path
+          required: true
+          name: accountAddress
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return the balance of the given address
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/AccountBalance'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /author/mint:
+    post:
+      operationId: mintAuthorToken
+      tags:
+        - AuthorContract
+      description: Mint Author Contract Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/MintFTRequest'
+      responses:
+        200:
+          description: Token minted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/MintReceipt'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    SmartContract:
+      type: object
+      properties:
+        address:
+          type: string
+        owner:
+          type: string
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: integer
+
+    TotalToken:
+      type: object
+      properties:
+        contractAddress:
+          type: string
+        contractName:
+          type: string
+        amount:
+          type: number
+
+    AccountBalance:
+      type: object
+      properties:
+        contractAddress:
+          type: string
+        accountAddress:
+          type: string
+        balance:
+          type: integer
+
+    MintFTRequest:
+      type: object
+      properties:
+        privateKey:
+          type: string
+        amount:
+          type: integer
+
+    MintReceipt:
+      type: object
+      properties:
+        minterAddress:
+          type: string
+        tokenAddress:
+          type: string
+        txHash:
+          type: string
+        txBlockNumber:
+          type: string
+        txBlockHash:
+          type: string
+        gasCost:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
