@@ -34,7 +34,7 @@ public class KlaytnContractStore implements ContractStore {
             }
             return (FungibleContract) STORAGE.get(address);
         } catch (Exception exception) {
-            throw new SmartContractException("Could find a contract", exception);
+            throw new SmartContractException("Could not load contract abi of " + name, exception);
         }
     }
 
