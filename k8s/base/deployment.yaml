@@ -23,7 +23,7 @@ spec:
           readinessProbe:
             httpGet:
               port: 8080
-              path: /q/health/ready
+              path: /author-contract/q/health/ready
           resources:
             requests:
               memory: "64Mi"
