@@ -4,9 +4,9 @@ import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 import com.klaytn.caver.methods.response.TransactionReceipt;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 public class ContractUtils {
@@ -17,11 +17,12 @@ public class ContractUtils {
     }
 
     public static String loadContractAbi(String contractName) throws URISyntaxException, IOException {
-        ClassLoader classLoader = ContractUtils.class.getClassLoader();
-        Path contractPath = Path.of("abi", contractName.concat(".abi"));
-        URL contractUrl = classLoader.getResource(contractPath.toString());
-        assert contractUrl != null;
-        return Files.readString(Path.of(contractUrl.toURI()));
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Path contractAbiPath = Path.of("abi", contractName.concat(".abi"));
+        try (InputStream contractAbi = classLoader.getResourceAsStream(contractAbiPath.toString())) {
+            assert contractAbi != null;
+            return new String(contractAbi.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 
     public static MintReceipt toMintReceipt(
