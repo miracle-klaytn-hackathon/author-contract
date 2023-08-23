@@ -43,7 +43,7 @@ public class KlaytnAuthorContract extends KlaytnFungibleContract implements Fung
     @Override
     public String getOwnerAddress() throws SmartContractException {
         try {
-            return onChainContract.symbol();
+            return onChainContract.owner();
         } catch (Exception exception) {
             throw new SmartContractException(
                     "Could not find an owner for the given contract", exception);

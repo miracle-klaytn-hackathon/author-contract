@@ -26,7 +26,7 @@ public class KIP7Extension extends KIP7 {
     }
 
     public String owner() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        List<Type> ownerOnChain = call("owner");
+        List<Type> ownerOnChain = extension.call("owner");
         if (ownerOnChain.size() != 1)
             throw new IllegalAccessException("This contract does not have one owner");
         Object ownerAddress = ownerOnChain.get(0).getValue();
