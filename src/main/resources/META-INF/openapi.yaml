@@ -3,6 +3,8 @@ info:
   version: '1'
   title: Author Token API
   description: API for interacting with Smart Contracts of Author Token
+servers:
+  - url: /author-contract
 paths:
   /author:
     get:
