@@ -1,7 +1,9 @@
-package com.github.miracle.klaytn.hackathon.contracts.impl.klaytn;
+package com.github.miracle.klaytn.hackathon.contracts.impl.klaytn.wrapper;
 
 import com.github.miracle.klaytn.hackathon.contracts.FungibleContract;
 import com.github.miracle.klaytn.hackathon.contracts.SmartContractException;
+import com.github.miracle.klaytn.hackathon.contracts.impl.klaytn.KIP7Extension;
+import com.github.miracle.klaytn.hackathon.contracts.impl.klaytn.KlaytnFungibleContract;
 import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 import com.github.miracle.klaytn.hackathon.utils.ContractUtils;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;

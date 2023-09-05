@@ -4,15 +4,7 @@ import com.github.miracle.klaytn.hackathon.openapi.model.MintReceipt;
 
 import java.math.BigInteger;
 
-public interface FungibleContract {
-
-    String getName() throws SmartContractException;
-
-    String getAddress() throws SmartContractException;
-
-    String getSymbol() throws SmartContractException;
-
-    String getOwnerAddress() throws SmartContractException;
+public interface FungibleContract extends SmartContract {
 
     Integer getDecimals() throws SmartContractException;
 

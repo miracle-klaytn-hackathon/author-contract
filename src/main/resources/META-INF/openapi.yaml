@@ -6,6 +6,34 @@ info:
 servers:
   - url: /author-contract
 paths:
+  /books/{address}:
+    get:
+      operationId: getContractInfo
+      tags:
+        - BookToken
+      description: Get On-chain information for a book token smart contract
+      parameters:
+        - in: path
+          required: true
+          name: address
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return name, address, author and abi of the contract
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SmartContract'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
   /author:
     get:
       operationId: getAuthorContract
@@ -121,8 +149,8 @@ components:
           type: string
         symbol:
           type: string
-        decimals:
-          type: integer
+        abi:
+          type: string
 
     TotalToken:
       type: object
