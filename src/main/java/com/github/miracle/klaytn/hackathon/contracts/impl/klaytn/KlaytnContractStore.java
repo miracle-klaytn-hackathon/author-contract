@@ -16,9 +16,9 @@ public class KlaytnContractStore implements ContractStore {
 
     private final Map<String, ? super SmartContract> STORAGE = new HashMap<>();
 
-    private static final String AUTHOR_CONTRACT_NAME = "AuthorToken";
+    private static final String AUTHOR_CONTRACT_NAME = "AuthorContract";
 
-    private static final String BOOK_CONTRACT_NAME = "BookToken";
+    private static final String BOOK_CONTRACT_NAME = "BookContract";
 
     private final Caver sharedCaver;
 
