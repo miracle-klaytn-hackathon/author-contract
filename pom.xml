@@ -172,6 +172,7 @@
                             <web3jLocation>.web3j</web3jLocation>
                             <inputContracts>
                                 <inputContract>src/main/resources/AuthorContract.sol</inputContract>
+                                <inputContract>src/main/resources/BookContract.sol</inputContract>
                             </inputContracts>
                             <solcVersion>0.8.20</solcVersion>
                             <solcArguments>

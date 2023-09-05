@@ -16,7 +16,7 @@ contract BookContract is KIP17, KIP17URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     constructor(address _authorContractAddress) KIP17("BookToken", "BTK") {
-        authorContract = AuthorContractInterface(_authorContractAddress);
+        authorContract = IAuthorContract(_authorContractAddress);
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
