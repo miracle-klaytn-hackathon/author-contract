@@ -6,11 +6,34 @@ info:
 servers:
   - url: /author-contract
 paths:
+  /books/recommendation:
+    get:
+      operationId: getRecommendation
+      tags:
+        - BookContract
+      description: Get recommend Book Contract NFTs to be mint
+      responses:
+        200:
+          description: Return a list of recommend Book Contract NFTs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/SmartContract'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /books/{address}:
     get:
       operationId: getContractInfo
       tags:
-        - BookToken
+        - BookContract
       description: Get On-chain information for a book token smart contract
       parameters:
         - in: path

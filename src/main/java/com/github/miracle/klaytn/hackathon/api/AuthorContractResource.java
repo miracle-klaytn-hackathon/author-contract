@@ -20,8 +20,6 @@ import java.util.function.Supplier;
 @ApplicationScoped
 public class AuthorContractResource implements AuthorContractApi {
 
-    private static final String CONTRACT_NAME = "AuthorContract";
-
     private final FungibleContract contract;
 
     private final String address;
