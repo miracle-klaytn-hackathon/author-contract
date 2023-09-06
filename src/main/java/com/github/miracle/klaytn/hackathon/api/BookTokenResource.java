@@ -2,6 +2,7 @@ package com.github.miracle.klaytn.hackathon.api;
 
 import com.github.miracle.klaytn.hackathon.contracts.ContractStore;
 import com.github.miracle.klaytn.hackathon.contracts.NonFungibleContract;
+import com.github.miracle.klaytn.hackathon.entities.BookTokenRecommendation;
 import com.github.miracle.klaytn.hackathon.openapi.api.BookContractApi;
 import com.github.miracle.klaytn.hackathon.openapi.model.SmartContract;
 import com.github.miracle.klaytn.hackathon.utils.UniUtils;
@@ -18,6 +19,9 @@ public class BookTokenResource implements BookContractApi {
 
     @Inject
     ContractStore contractStore;
+
+    @Inject
+    BookTokenRecommendation tokenRecommendation;
 
     @Override
     public CompletionStage<Response> getContractInfo(String address) {
