@@ -2,26 +2,30 @@ package com.github.miracle.klaytn.hackathon.api;
 
 import com.github.miracle.klaytn.hackathon.contracts.ContractStore;
 import com.github.miracle.klaytn.hackathon.contracts.NonFungibleContract;
-import com.github.miracle.klaytn.hackathon.entities.BookTokenRecommendation;
+import com.github.miracle.klaytn.hackathon.entities.BookContractRecommendation;
 import com.github.miracle.klaytn.hackathon.openapi.api.BookContractApi;
 import com.github.miracle.klaytn.hackathon.openapi.model.SmartContract;
 import com.github.miracle.klaytn.hackathon.utils.UniUtils;
+import com.github.miracle.klaytn.hackathon.utils.mappers.BookContractMapper;
+
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
-public class BookTokenResource implements BookContractApi {
+public class BookContractResource implements BookContractApi {
 
     @Inject
     ContractStore contractStore;
 
     @Inject
-    BookTokenRecommendation tokenRecommendation;
+    BookContractMapper bookContractMapper;
 
     @Override
     public CompletionStage<Response> getContractInfo(String address) {
@@ -56,7 +60,18 @@ public class BookTokenResource implements BookContractApi {
 
     @Override
     public CompletionStage<Response> getRecommendation() {
-        return null;
+        return BookContractRecommendation.<BookContractRecommendation>listAll()
+                .map(recommendations -> Response.ok(
+                    bookContractMapper.toSmartContract(recommendations)).build())
+                .subscribeAsCompletionStage();
+    }
+
+    @GET
+    @Path("/test")
+    public CompletionStage<Response> test() {
+        return BookContractRecommendation.listAll().map(tokens -> {
+            return Response.ok(tokens).build();
+        }).subscribeAsCompletionStage();
     }
 
 }

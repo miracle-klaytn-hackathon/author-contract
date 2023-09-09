@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="loic">
+        <ext:createCollection collectionName="BookContractRecommendation"/>
+
+        <ext:insertOne collectionName="BookContractRecommendation">
+            <ext:document>
+                {
+                    "rank": 1,
+                    "name": "SampleBookToken",
+                    "address": "0x829f8829ccf5680fa9605bc7c3a762995aa90265",
+                    "symbol": "BTK",
+                    "owner": "0xce35cd7e1cb99ce4286c5e67db4ca267dec33bc9"
+                }
+            </ext:document>
+        </ext:insertOne>
+    </changeSet>
+
+</databaseChangeLog>

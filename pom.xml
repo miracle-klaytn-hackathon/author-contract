@@ -21,6 +21,7 @@
         <smart-contract-plugin.version>1.2.0</smart-contract-plugin.version>
         <openapi.generator.version>6.6.0</openapi.generator.version>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <skipITs>true</skipITs>
     </properties>
     <dependencyManagement>
@@ -87,6 +88,14 @@
             <artifactId>quarkus-logging-json</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-liquibase-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-mongodb-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.klaytn.caver</groupId>
             <artifactId>core</artifactId>
             <version>1.10.2</version>
@@ -106,10 +115,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-            <scope>provided</scope>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -234,6 +242,18 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <compilerArg>
+                            -Amapstruct.defaultComponentModel=cdi
+                        </compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
