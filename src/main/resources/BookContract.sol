@@ -6,7 +6,7 @@ import "@klaytn/contracts/KIP/token/KIP17/extensions/KIP17URIStorage.sol";
 import "@klaytn/contracts/access/Ownable.sol";
 import "@klaytn/contracts/utils/Counters.sol";
 
-contract BookToken is KIP17, KIP17URIStorage, Ownable {
+contract BookContract is KIP17, KIP17URIStorage, Ownable {
 
     using Counters for Counters.Counter;
 

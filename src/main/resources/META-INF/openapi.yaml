@@ -54,6 +54,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  
+  /books/abi:
+    get:
+      operationId: getBookContractABI
+      tags:
+      - BookContract
+      description: Get Application Binary Interface (ABI) of Book Contract
+      responses:
+        200:
+          description: Return name, address, author and abi of the contract
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /author:
     get:

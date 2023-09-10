@@ -62,4 +62,11 @@ public class BookContractResource implements BookContractApi {
                 .subscribeAsCompletionStage();
     }
 
+    @Override
+    public CompletionStage<Response> getBookContractABI() {
+        return UniUtils.createFromSupplier(contractStore::getBookContractABI)
+                .map(abi -> Response.ok(abi).build())
+                .subscribeAsCompletionStage();
+    }
+
 }
