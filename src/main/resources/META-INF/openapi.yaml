@@ -162,8 +162,6 @@ components:
           type: string
         symbol:
           type: string
-        abi:
-          type: string
 
     TotalToken:
       type: object

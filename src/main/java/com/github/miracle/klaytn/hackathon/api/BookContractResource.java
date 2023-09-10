@@ -43,7 +43,6 @@ public class BookContractResource implements BookContractApi {
         return List.of(
                 UniUtils.createFromSupplier(contract::getName),
                 UniUtils.createFromSupplier(contract::getAddress),
-                UniUtils.createFromSupplier(contract::getAbi),
                 UniUtils.createFromSupplier(contract::getSymbol),
                 UniUtils.createFromSupplier(contract::getOwnerAddress));
     }
@@ -52,9 +51,8 @@ public class BookContractResource implements BookContractApi {
         return SmartContract.builder()
                 .name((String) unis.get(0))
                 .address((String) unis.get(1))
-                .abi((String) unis.get(2))
-                .symbol((String) unis.get(3))
-                .owner((String) unis.get(4))
+                .symbol((String) unis.get(2))
+                .owner((String) unis.get(3))
                 .build();
     }
 
@@ -64,14 +62,6 @@ public class BookContractResource implements BookContractApi {
                 .map(recommendations -> Response.ok(
                     bookContractMapper.toSmartContract(recommendations)).build())
                 .subscribeAsCompletionStage();
-    }
-
-    @GET
-    @Path("/test")
-    public CompletionStage<Response> test() {
-        return BookContract.listAll().map(tokens -> {
-            return Response.ok(tokens).build();
-        }).subscribeAsCompletionStage();
     }
 
 }
