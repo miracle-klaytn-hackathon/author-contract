@@ -2,7 +2,7 @@ package com.github.miracle.klaytn.hackathon.api;
 
 import com.github.miracle.klaytn.hackathon.contracts.ContractStore;
 import com.github.miracle.klaytn.hackathon.contracts.NonFungibleContract;
-import com.github.miracle.klaytn.hackathon.entities.BookContractRecommendation;
+import com.github.miracle.klaytn.hackathon.entities.BookContract;
 import com.github.miracle.klaytn.hackathon.openapi.api.BookContractApi;
 import com.github.miracle.klaytn.hackathon.openapi.model.SmartContract;
 import com.github.miracle.klaytn.hackathon.utils.UniUtils;
@@ -60,7 +60,7 @@ public class BookContractResource implements BookContractApi {
 
     @Override
     public CompletionStage<Response> getRecommendation() {
-        return BookContractRecommendation.<BookContractRecommendation>listAll()
+        return BookContract.<BookContract>listAll()
                 .map(recommendations -> Response.ok(
                     bookContractMapper.toSmartContract(recommendations)).build())
                 .subscribeAsCompletionStage();
@@ -69,7 +69,7 @@ public class BookContractResource implements BookContractApi {
     @GET
     @Path("/test")
     public CompletionStage<Response> test() {
-        return BookContractRecommendation.listAll().map(tokens -> {
+        return BookContract.listAll().map(tokens -> {
             return Response.ok(tokens).build();
         }).subscribeAsCompletionStage();
     }

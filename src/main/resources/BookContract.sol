@@ -5,22 +5,31 @@ import "@klaytn/contracts/KIP/token/KIP17/KIP17.sol";
 import "@klaytn/contracts/KIP/token/KIP17/extensions/KIP17URIStorage.sol";
 import "@klaytn/contracts/access/Ownable.sol";
 import "@klaytn/contracts/utils/Counters.sol";
-import "IAuthorContract.sol";
 
-contract BookContract is KIP17, KIP17URIStorage, Ownable {
-
-    IAuthorContract public authorContract;
+contract BookToken is KIP17, KIP17URIStorage, Ownable {
 
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor(address _authorContractAddress) KIP17("BookToken", "BTK") {
-        authorContract = IAuthorContract(_authorContractAddress);
+    string public bookTitle;
+    string public bookAuthor;
+    uint256 public publicationYear;
+    string public isbn;
+
+    constructor(string memory name, 
+                string memory symbol,
+                string memory _bookTitle,
+                string memory _bookAuthor,
+                uint256 _publicationYear, 
+                string memory _isbn) KIP17(name, symbol) {
+        bookTitle = _bookTitle;
+        bookAuthor = _bookAuthor;
+        publicationYear = _publicationYear;
+        isbn = _isbn;
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
-        require(authorContract.balanceOf(msg.sender) > 0, "Must own AuthorToken");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
@@ -34,10 +43,10 @@ contract BookContract is KIP17, KIP17URIStorage, Ownable {
     }
 
     function tokenURI(uint256 tokenId)
-    public
-    view
-    override(KIP17, KIP17URIStorage)
-    returns (string memory)
+        public
+        view
+        override(KIP17, KIP17URIStorage)
+        returns (string memory)
     {
         return super.tokenURI(tokenId);
     }

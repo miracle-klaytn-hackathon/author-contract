@@ -1,25 +1,80 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet id="1" author="loic">
-        <ext:createCollection collectionName="BookContractRecommendation"/>
+    <changeSet id="1" author="vanduc2514">
+        <ext:createCollection collectionName="BookContract" />
 
-        <ext:insertOne collectionName="BookContractRecommendation">
-            <ext:document>
-                {
-                    "rank": 1,
-                    "name": "SampleBookToken",
-                    "address": "0x829f8829ccf5680fa9605bc7c3a762995aa90265",
-                    "symbol": "BTK",
-                    "owner": "0xce35cd7e1cb99ce4286c5e67db4ca267dec33bc9"
-                }
-            </ext:document>
-        </ext:insertOne>
+        <ext:insertMany collectionName="BookContract">
+            <ext:documents>
+                [
+                    {
+                        "name": "CleanCodeToken",
+                        "address": "0x82685Baf4547c70732E6333AEc8dC255601224Fa",
+                        "symbol": "BTK",
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                    },
+                    {
+                        "name": "ElonMuskToken",
+                        "address": "0xf299FcbA13021c7a1A3FF6e3648273707f37B807",
+                        "symbol": "EMT",
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                    },
+                    {
+                        "name": "HollyToken",
+                        "address": "0x0A2a8B8aD0633Dc392238A55953De7d0d91027E8",
+                        "symbol": "HT",
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                    },
+                    {
+                        "name": "IronFlameToken",
+                        "address": "0x23Dc1665adEeaD09Ae99EF8F1cC25366922CE564",
+                        "symbol": "IFT",
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                    },
+                    {
+                        "name": "SpareToken",
+                        "address": "0x5592ed573a6B80f5617D0c2649e3B4bd43C4F988",
+                        "symbol": "ST",
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                    },
+                    { 
+                        "name": "AtomicHabitsToken", 
+                        "address": "0x2BdFa022AD8645Bc2Ce7F6e9623194f42b4aD55A",
+                        "symbol": "AHT", 
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26" 
+                    },
+                    { 
+                        "name": "TheAlchemisToken", 
+                        "address": "0xd1C327308177Dc8eC7178CC6D6D1b15e5A34724c",
+                        "symbol": "TAT", 
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26" 
+                    } ,
+                    { 
+                        "name": "MockingBirdToken", 
+                        "address": "0xFc58d18DF7Dc555b7284e945eA3AEcd5918C04b3",
+                        "symbol": "MBT", 
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26" 
+                    },
+                    { 
+                        "name": "GreatGatsbyToken", 
+                        "address": "0xfb90aB1D71fE0b2E7011796D118C6914356d083c", 
+                        "symbol": "GGT", 
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26" 
+                    },
+                    { 
+                        "name": "CatcherRyeToken", 
+                        "address": "0xD9D7953885FD4c87e1a79Ff8E2b5B02801EA59B9", 
+                        "symbol": "CRT", 
+                        "owner": "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26" 
+                    }
+                ]
+            </ext:documents>
+        </ext:insertMany>
     </changeSet>
 
 </databaseChangeLog>
