@@ -35,11 +35,14 @@ jobs:
       with:
         cluster_name: ${{ vars.GKE_SB_CLUSTER }}
         location: ${{ vars.GKE_SB_REGION }}
+    # Build the Java Artifact
+    - name: Build Java Artifact
+      run: |-
+        mvn clean package
     # Build the Docker image
-    - name: Build
+    - name: Build Docker Image
       run: |-
         docker build \
-          --file src/main/docker/Dockerfile.jvm \
           --tag "${{ vars.GCR_REPOSITORY }}/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
@@ -62,4 +65,5 @@ jobs:
         ../../kustomize edit add configmap author-contract-sb \
           --from-literal=RPC_URL=${{ vars.RPC_URL }} \
           --from-literal=CONTRACT_AUTHOR_ADDRESS=${{ vars.CONTRACT_AUTHOR_ADDRESS }}
+          --from-literal=MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }}
         ../../kustomize build . | kubectl apply -f -
