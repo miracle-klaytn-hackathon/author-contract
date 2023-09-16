@@ -35,6 +35,12 @@ jobs:
       with:
         cluster_name: ${{ vars.GKE_SB_CLUSTER }}
         location: ${{ vars.GKE_SB_REGION }}
+    # Setup Java 17 for build artifact
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
     # Build the Java Artifact
     - name: Build Java Artifact
       run: |-
