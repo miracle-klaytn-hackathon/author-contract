@@ -70,6 +70,6 @@ jobs:
         ../../kustomize edit set image IMAGE:TAG=${{ vars.GCR_REPOSITORY }}/$IMAGE:$GITHUB_SHA
         ../../kustomize edit add configmap author-contract-sb \
           --from-literal=RPC_URL=${{ vars.RPC_URL }} \
-          --from-literal=CONTRACT_AUTHOR_ADDRESS=${{ vars.CONTRACT_AUTHOR_ADDRESS }}
+          --from-literal=CONTRACT_AUTHOR_ADDRESS=${{ vars.CONTRACT_AUTHOR_ADDRESS }} \
           --from-literal=MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }}
         ../../kustomize build . | kubectl apply -f -
