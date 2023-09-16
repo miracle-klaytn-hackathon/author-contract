@@ -20,6 +20,9 @@ spec:
           name: author-contract
           ports:
             - containerPort: 8080
+          envFrom:
+          - configMapRef:
+              name: author-contract-config
           readinessProbe:
             httpGet:
               port: 8080

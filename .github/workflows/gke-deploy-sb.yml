@@ -68,7 +68,7 @@ jobs:
         # replacing the image name in the k8s template
         cd k8s/base
         ../../kustomize edit set image IMAGE:TAG=${{ vars.GCR_REPOSITORY }}/$IMAGE:$GITHUB_SHA
-        ../../kustomize edit add configmap author-contract-sb \
+        ../../kustomize edit add configmap author-contract-config \
           --from-literal=RPC_URL=${{ vars.RPC_URL }} \
           --from-literal=CONTRACT_AUTHOR_ADDRESS=${{ vars.CONTRACT_AUTHOR_ADDRESS }} \
           --from-literal=MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }}
