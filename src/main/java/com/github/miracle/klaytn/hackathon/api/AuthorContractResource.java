@@ -20,22 +20,16 @@ import java.util.function.Supplier;
 @ApplicationScoped
 public class AuthorContractResource implements AuthorContractApi {
 
-    private static final String CONTRACT_NAME = "AuthorContract";
-
     private final FungibleContract contract;
 
     private final String address;
 
-    private final String name;
-
     @Inject
     public AuthorContractResource(
             @ConfigProperty(name = "contract.author.address") String contractAddress,
-            @ConfigProperty(name = "contract.author.name") String contractName,
             ContractStore contractStore) {
-        contract = contractStore.getAuthorContract(contractAddress, contractName);
+        contract = contractStore.getAuthorContract(contractAddress);
         address = contractAddress;
-        name = contractName;
     }
 
     @Override
@@ -52,17 +46,15 @@ public class AuthorContractResource implements AuthorContractApi {
     private List<Uni<?>> buildInfoUnis() {
         return List.of(
                 UniUtils.createFromSupplier(contract::getSymbol),
-                UniUtils.createFromSupplier(contract::getOwnerAddress),
-                UniUtils.createFromSupplier(contract::getDecimals));
+                UniUtils.createFromSupplier(contract::getOwnerAddress));
     }
 
     private SmartContract toSmartContract(List<?> unis) {
         return SmartContract.builder()
-                .name(name)
+                .name(contract.getName())
                 .address(address)
                 .symbol((String) unis.get(0))
                 .owner((String) unis.get(1))
-                .decimals((Integer) unis.get(2))
                 .build();
     }
 
@@ -76,7 +68,7 @@ public class AuthorContractResource implements AuthorContractApi {
 
     private TotalToken toTotalToken(BigInteger amount) {
         return TotalToken.builder()
-                .contractName(name)
+                .contractName(contract.getName())
                 .contractAddress(address)
                 .amount(BigDecimal.valueOf(amount.longValue()))
                 .build();

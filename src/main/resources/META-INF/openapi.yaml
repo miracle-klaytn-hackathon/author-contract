@@ -6,6 +6,75 @@ info:
 servers:
   - url: /author-contract
 paths:
+  /books/recommendation:
+    get:
+      operationId: getRecommendation
+      tags:
+        - BookContract
+      description: Get recommend Book Contract NFTs to be mint
+      responses:
+        200:
+          description: Return a list of recommend Book Contract NFTs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/SmartContract'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /books/{address}:
+    get:
+      operationId: getContractInfo
+      tags:
+        - BookContract
+      description: Get On-chain information for a book token smart contract
+      parameters:
+        - in: path
+          required: true
+          name: address
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return name, address, author and abi of the contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartContract'
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /books/abi:
+    get:
+      operationId: getBookContractABI
+      tags:
+      - BookContract
+      description: Get Application Binary Interface (ABI) of Book Contract
+      responses:
+        200:
+          description: Return name, address, author and abi of the contract
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: Error when invoking contract function
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /author:
     get:
       operationId: getAuthorContract
@@ -18,14 +87,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/SmartContract'
         default:
           description: Error when invoking contract function
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/ErrorResponse'
 
   /author/total:
@@ -40,14 +107,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/TotalToken'
         default:
           description: Error when invoking contract function
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/ErrorResponse'
 
 
@@ -69,14 +134,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/AccountBalance'
         default:
           description: Error when invoking contract function
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/ErrorResponse'
 
   /author/mint:
@@ -98,14 +161,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/MintReceipt'
         default:
           description: Error when invoking contract function
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/ErrorResponse'
 
 components:
@@ -113,6 +174,8 @@ components:
     SmartContract:
       type: object
       properties:
+        id:
+          type: string
         address:
           type: string
         owner:
@@ -121,8 +184,6 @@ components:
           type: string
         symbol:
           type: string
-        decimals:
-          type: integer
 
     TotalToken:
       type: object
