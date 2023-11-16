@@ -1,4 +1,4 @@
-package com.github.miracle.klaytn.hackathon.health;
+package com.github.miracle.klaytn.hackathon.monitor.health;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
