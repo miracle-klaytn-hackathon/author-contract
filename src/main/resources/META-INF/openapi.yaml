@@ -6,6 +6,53 @@ info:
 servers:
   - url: /author-contract
 paths:
+  /auth/siwe/nonce:
+    get:
+      operationId: getNonce
+      tags:
+        - SigninWithEthereum
+      description: Get Nonce for create SIWE (Signin with Ethereum) message
+      responses:
+        200:
+          description: Return a random value as string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiweNonce'
+        default:
+          description: Error when getting nonce value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /auth/siwe/verify:
+    post:
+      operationId: verifySiweMessage
+      tags:
+        - SigninWithEthereum
+      description: Verify siwe message with user signature
+      requestBody:
+        description: Siwe Message with signature
+        required: true
+        content:
+           application/json:
+              schema:
+                $ref: '#/components/schemas/SiweRequest'
+      responses:
+        200:
+          description: Return a JWT token if message is verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiweResponse'
+        default:
+          description: Error when verifying siwe message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /books/recommendation:
     get:
       operationId: getRecommendation
@@ -171,6 +218,26 @@ paths:
 
 components:
   schemas:
+    SiweNonce:
+      type: object
+      properties:
+        nonce:
+          type: string
+
+    SiweRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        signature:
+          type: string
+    
+    SiweResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
     SmartContract:
       type: object
       properties:
