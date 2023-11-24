@@ -19,9 +19,11 @@ import jakarta.ws.rs.core.Response;
 @ApplicationScoped
 public class SigninWithEthereumResource implements SigninWithEthereumApi {
 
+    private static final int NONCE_LENGTH = 16;
+
     @Override
     public CompletionStage<Response> getNonce() {
-        return Uni.createFrom().item(EncryptionUtils.generateNonce())
+        return Uni.createFrom().item(() -> EncryptionUtils.generateNonce(NONCE_LENGTH))
                 .map(nonce -> new SiweNonce().nonce(nonce))
                 .map(siweNonce -> Response.ok(siweNonce).build())
                 .subscribeAsCompletionStage();
@@ -37,15 +39,16 @@ public class SigninWithEthereumResource implements SigninWithEthereumApi {
                         .expiresAt(Long.parseLong(message.getExpirationTime()))
                         .sign())
                 .map(jwt -> Response.ok(new SiweResponse().token(jwt)).build())
-                .onFailure()
-                .recoverWithItem(exception -> Response.status(400).entity(new ErrorResponse().message(exception.getMessage())).build())
+                // .onFailure()
+                // .recoverWithItem(exception -> Response.status(400).entity(new ErrorResponse().message(exception.getMessage())).build())
                 .subscribeAsCompletionStage();
     }
 
     private SiweMessage verifySiweMessage(String message, String signature) {
+        System.out.println(message);
         try {
             SiweMessage siweMessage = new SiweMessage.Parser().parse(message);
-            siweMessage.verify("http://localhost", message, signature);
+            siweMessage.verify("http://localhost", siweMessage.getNonce(), signature);
             return siweMessage;
         } catch (SiweException siweException) {
             throw new RuntimeException("Siwe Verification failed!", siweException);
