@@ -1,6 +1,12 @@
 package com.github.miracle.klaytn.hackathon.api;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletionStage;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.github.miracle.klaytn.hackathon.openapi.api.SigninWithEthereumApi;
 import com.github.miracle.klaytn.hackathon.openapi.model.ErrorResponse;
@@ -14,12 +20,17 @@ import com.moonstoneid.siwe.error.SiweException;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class SigninWithEthereumResource implements SigninWithEthereumApi {
 
     private static final int NONCE_LENGTH = 16;
+
+    @Inject
+    @ConfigProperty(name = "mp.jwt.verify.issuer")
+    private String jwtIssuer;
 
     @Override
     public CompletionStage<Response> getNonce() {
@@ -33,22 +44,36 @@ public class SigninWithEthereumResource implements SigninWithEthereumApi {
     public CompletionStage<Response> verifySiweMessage(SiweRequest siweRequest) {
         return Uni.createFrom()
                 .item(() -> verifySiweMessage(siweRequest.getMessage(), siweRequest.getSignature()))
-                .map(message -> Jwt.issuer("https://localhost")
-                        .upn(message.getAddress())
-                        .issuedAt(Long.parseLong(message.getIssuedAt()))
-                        .expiresAt(Long.parseLong(message.getExpirationTime()))
-                        .sign())
+                .map(this::buildJwt)
                 .map(jwt -> Response.ok(new SiweResponse().token(jwt)).build())
-                // .onFailure()
-                // .recoverWithItem(exception -> Response.status(400).entity(new ErrorResponse().message(exception.getMessage())).build())
+                .onFailure()
+                .recoverWithItem(exception -> Response.status(400)
+                        .entity(new ErrorResponse().message(exception.getMessage())).build())
                 .subscribeAsCompletionStage();
     }
 
+    private String buildJwt(SiweMessage message) {
+        return Jwt.issuer(jwtIssuer)
+                .upn(message.getAddress())
+                .issuedAt(parseISODateTime(message.getIssuedAt()))
+                .expiresAt(parseISODateTime(message.getExpirationTime()))
+                .sign();
+    }
+
+    private long parseISODateTime(String isoDateTime) {
+        if (isoDateTime == null) {
+            return 0;
+        }
+        LocalDateTime time = LocalDateTime.parse(isoDateTime, DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime zdt = ZonedDateTime.of(time, ZoneId.systemDefault());
+        return zdt.toInstant().toEpochMilli();
+    }
+
     private SiweMessage verifySiweMessage(String message, String signature) {
-        System.out.println(message);
         try {
-            SiweMessage siweMessage = new SiweMessage.Parser().parse(message);
-            siweMessage.verify("http://localhost", siweMessage.getNonce(), signature);
+            SiweMessage.Parser parser = new SiweMessage.Parser();
+            SiweMessage siweMessage = parser.parse(message);
+            siweMessage.verify("localhost", siweMessage.getNonce(), signature);
             return siweMessage;
         } catch (SiweException siweException) {
             throw new RuntimeException("Siwe Verification failed!", siweException);
