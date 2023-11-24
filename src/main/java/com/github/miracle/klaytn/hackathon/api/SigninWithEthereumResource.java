@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import java.util.concurrent.CompletionStage;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,8 +20,11 @@ import com.moonstoneid.siwe.error.SiweException;
 
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
@@ -57,6 +61,7 @@ public class SigninWithEthereumResource implements SigninWithEthereumApi {
                 .upn(message.getAddress())
                 .issuedAt(parseISODateTime(message.getIssuedAt()))
                 .expiresAt(parseISODateTime(message.getExpirationTime()))
+                .groups(Set.of("user"))
                 .sign();
     }
 
@@ -78,6 +83,13 @@ public class SigninWithEthereumResource implements SigninWithEthereumApi {
         } catch (SiweException siweException) {
             throw new RuntimeException("Siwe Verification failed!", siweException);
         }
+    }
+
+    @GET
+    @Path("/user")
+    @RolesAllowed("user")
+    public String hello() {
+        return "Hello User";
     }
 
 }
