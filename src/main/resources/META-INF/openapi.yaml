@@ -76,6 +76,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /profiles:
+    post:
+      operationId: createUserProfile
+      tags:
+        - UserProfile
+      description: Create a new user profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      responses:
+        201:
+          description: Successfull created a profile.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL to the created resource.
+
+  /profiles/{address}:
+    get:
+      operationId: getUserProfile
+      tags:
+        - UserProfile
+      description: Get User Profile by ID
+      parameters:
+        - in: path
+          required: true
+          name: address
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return the detail of User Profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+
   /books/{address}:
     get:
       operationId: getContractInfo
@@ -236,6 +276,18 @@ components:
       type: object
       properties:
         token:
+          type: string
+
+    UserProfile:
+      type: object
+      properties:
+        address:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        avatar_url:
           type: string
 
     SmartContract:
