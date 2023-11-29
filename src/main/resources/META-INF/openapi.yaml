@@ -280,7 +280,9 @@ components:
     UserProfile:
       type: object
       properties:
-        address:
+        id:
+          type: string
+        wallet_address:
           type: string
         username:
           type: string
