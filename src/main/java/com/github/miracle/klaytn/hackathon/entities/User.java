@@ -1,7 +1,5 @@
 package com.github.miracle.klaytn.hackathon.entities;
 
-import org.bson.Document;
-
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 import io.smallrye.mutiny.Uni;
