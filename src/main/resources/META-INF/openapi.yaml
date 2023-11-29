@@ -87,6 +87,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserProfile'
+            example:
+              wallet_address: "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+              username: miracle_team
+              email: miracleklaytnhackathon@gmail.com
+              
       responses:
         201:
           description: Successfull created a profile.
@@ -115,6 +120,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfile'
+              example:
+                id: 1
+                wallet_address: "0x8a17DA5C4F375E694F7fab7799E233A8fF101C26"
+                username: miracle_team
+                email: miracleklaytnhackathon@gmail.com
 
   /books/{address}:
     get:
