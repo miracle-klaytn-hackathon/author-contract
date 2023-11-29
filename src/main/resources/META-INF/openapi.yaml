@@ -78,6 +78,8 @@ paths:
 
   /profiles:
     post:
+      security:
+        - bearerAuth: []
       operationId: createUserProfile
       tags:
         - UserProfile
@@ -103,6 +105,8 @@ paths:
 
   /profiles/{address}:
     get:
+      security:
+        - bearerAuth: []
       operationId: getUserProfile
       tags:
         - UserProfile
@@ -266,6 +270,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+
   schemas:
     SiweNonce:
       type: object
