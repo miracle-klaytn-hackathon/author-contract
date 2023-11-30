@@ -22,13 +22,13 @@ import jakarta.ws.rs.core.UriInfo;
 public class UserProfileResource implements UserProfileApi {
 
     @Context
-    private SecurityContext securityContext;
+    SecurityContext securityContext;
 
     @Context
-    private UriInfo uriInfo;
+    UriInfo uriInfo;
 
     @Inject
-    private UserMapper userMapper;
+    UserMapper userMapper;
 
     @Override
     @RolesAllowed({ "user", "author", "admin" })
@@ -41,8 +41,8 @@ public class UserProfileResource implements UserProfileApi {
 
     private Response buildCreatedUserResponse(User user) {
         URI createdLocation = uriInfo.getBaseUriBuilder()
-                .path(UserProfileResource.class)
-                .path(user.walletAddress)
+                .path(UserProfileApi.class)
+                .path(user.getWalletAddress())
                 .build();
         return Response.created(createdLocation).build();
     }

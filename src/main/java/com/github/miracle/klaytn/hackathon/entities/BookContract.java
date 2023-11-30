@@ -6,30 +6,18 @@ import org.bson.types.ObjectId;
 
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 @MongoEntity(collection = "BookContract")
 public class BookContract extends ReactivePanacheMongoEntity {
-    public ObjectId id;
-    public LocalDate recommendDate;
-    public int rank;
-    public String name;
-    public String address;
-    public String symbol;
-    public String owner;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
+    private ObjectId id;
+    private LocalDate recommendDate;
+    private int rank;
+    private String name;
+    private String address;
+    private String symbol;
+    private String owner;
 }
