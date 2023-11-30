@@ -10,6 +10,7 @@ import com.github.miracle.klaytn.hackathon.openapi.model.ErrorResponse;
 import com.github.miracle.klaytn.hackathon.openapi.model.UserProfile;
 import com.github.miracle.klaytn.hackathon.utils.mappers.UserMapper;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Response.Status;
 
 @ApplicationScoped
 public class UserProfileResource implements UserProfileApi {
@@ -33,10 +35,20 @@ public class UserProfileResource implements UserProfileApi {
     @Override
     @RolesAllowed({ "user", "author", "admin" })
     public CompletionStage<Response> createUserProfile(UserProfile userProfile) {
-        return userMapper.toUser(userProfile)
-                .<User>persist()
+        return User.isUserNotExist(userProfile.getWalletAddress())
+                .<User>map(ignored -> userMapper.toUser(userProfile))
+                .<User>flatMap(user -> user.persist())
                 .map(this::buildCreatedUserResponse)
+                .onFailure()
+                .recoverWithItem(this::buildBadRequestResponse)
                 .subscribeAsCompletionStage();
+    }
+
+    private Response buildBadRequestResponse(Throwable throwable) {
+        ErrorResponse errorResponse = new ErrorResponse().message(throwable.getMessage());
+        return Response.status(Status.BAD_REQUEST)
+                .entity(errorResponse)
+                .build();
     }
 
     private Response buildCreatedUserResponse(User user) {
@@ -61,6 +73,8 @@ public class UserProfileResource implements UserProfileApi {
         return User.findByWalletAddress(address)
                 .map(userMapper::toUserProfile)
                 .map(this::buildFindUserProfileResponse)
+                .onFailure()
+                .recoverWithItem(this::buildBadRequestResponse)
                 .subscribeAsCompletionStage();
     }
 

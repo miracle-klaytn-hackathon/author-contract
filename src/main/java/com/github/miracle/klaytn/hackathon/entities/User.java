@@ -17,7 +17,14 @@ public class User extends ReactivePanacheMongoEntity {
     private int totalNft;
     private int totalTransaction;
 
+    public static Uni<Void> isUserNotExist(String walletAddress) {
+        return findByWalletAddress(walletAddress)
+                .onItem().ifNotNull().failWith(new RuntimeException("User Existed!"))
+                .onItem().ignore().andContinueWithNull();
+    }
+
     public static Uni<User> findByWalletAddress(String walletAddress) {
-        return find("walletAddress", walletAddress).firstResult();
+        return find("walletAddress", walletAddress).<User>firstResult()
+                .onItem().ifNull().failWith(new RuntimeException("User Not Found!"));
     }
 }
