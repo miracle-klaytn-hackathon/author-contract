@@ -50,14 +50,6 @@ public class UserProfileResource implements UserProfileApi {
     @Override
     @RolesAllowed({ "user", "author", "admin" })
     public CompletionStage<Response> getUserProfile(String address) {
-        if (!securityContext.getUserPrincipal().getName().equals(address)) {
-            return CompletableFuture.completedStage(
-                    Response.status(401).entity(
-                            new ErrorResponse()
-                                    .code("401")
-                                    .message("Cannot request another user profile"))
-                            .build());
-        }
         return User.findByWalletAddress(address)
                 .map(userMapper::toUserProfile)
                 .map(this::buildFindUserProfileResponse)
