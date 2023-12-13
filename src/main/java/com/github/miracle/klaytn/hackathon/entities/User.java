@@ -2,33 +2,29 @@ package com.github.miracle.klaytn.hackathon.entities;
 
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
+import io.smallrye.mutiny.Uni;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 @MongoEntity(collection = "User")
 public class User extends ReactivePanacheMongoEntity {
-    public String walletAdress;
-    public String avatarLink;
-    public String userName;
-    public String email;
-    public int totalNft;
-    public int totalTransaction;
+    private String walletAddress;
+    private String avatarUrl;
+    private String username;
+    private String email;
+    private int totalNft;
+    private int totalTransaction;
 
-    public String getName() {
-        return userName;
+    public static Uni<Void> isUserNotExist(String walletAddress) {
+        return findByWalletAddress(walletAddress)
+                .onItem().ifNotNull().failWith(new RuntimeException("User Existed!"))
+                .onItem().ignore().andContinueWithNull();
     }
 
-    public String getWalletAddress() {
-        return walletAdress;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public int getTotalNft() {
-        return totalNft;
-    }
-
-     public int getTotalTransaction() {
-        return totalTransaction;
+    public static Uni<User> findByWalletAddress(String walletAddress) {
+        return find("walletAddress", walletAddress).<User>firstResult()
+                .onItem().ifNull().failWith(new RuntimeException("User Not Found!"));
     }
 }
